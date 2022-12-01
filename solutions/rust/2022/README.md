@@ -12,6 +12,6 @@
 Day       Time   Rank  Score       Time   Rank  Score
   1   08:35:28  61140      0   09:19:50  61828      0  * First time ever builind a rust thing.
                                                        * Didn't spend any time prior to AoC using rust
-						       * A little more cryptic than I was hoping for.
+						                   * A little more cryptic than I was hoping for.
                                                         
 </pre>
