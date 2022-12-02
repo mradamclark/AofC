@@ -13,13 +13,13 @@ fn parse_rps_game(game: (&str, &str)) -> (RPS, STATE) {
         "A" => RPS::Rock,
         "B" => RPS::Paper,
         "C" => RPS::Scissors,
-        _ => todo!(),
+        _ => panic!(),
      };
     let b: STATE = match game.1 {
         "X" => STATE::Lost,
         "Y" => STATE::Draw,
         "Z" => STATE::Win,
-        _ => todo!(),
+        _ => panic!(),
      };
 
     (a, b)
