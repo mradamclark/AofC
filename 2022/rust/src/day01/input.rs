@@ -3,7 +3,7 @@ use std::io::BufReader;
 
 use crate::day01::Input;
 
-const INPUT: &str = include_str!("../../input/day01/input.txt");
+const INPUT: &str = include_str!("../../../input/day01/input.txt");
 
 pub fn read() -> Input {
     INPUT.trim()

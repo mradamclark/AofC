@@ -4,7 +4,7 @@ use clap::Parser;
 #[derive(Parser, Debug)]
 
 struct Args {
-    #[arg(default_value_t = 1)]
+    #[arg(default_value_t = 0)]
     day: u8,
 }
 
