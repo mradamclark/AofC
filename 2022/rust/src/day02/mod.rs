@@ -4,16 +4,16 @@ pub mod part_two;
 
 use crate::Part;
 
-pub type Input<'a> = Vec<(&'a str,&'a str)>;
+pub type Input<'a> = Vec<(&'a str, &'a str)>;
 
-#[derive(Debug,Clone,Copy)] 
+#[derive(Debug, Clone, Copy)]
 pub enum RPS {
     Rock = 1,
     Paper = 2,
     Scissors = 3,
 }
 
-#[derive(Debug)] 
+#[derive(Debug)]
 pub enum STATE {
     Win = 6,
     Draw = 3,
