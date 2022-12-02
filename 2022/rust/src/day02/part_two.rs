@@ -3,47 +3,47 @@ use crate::day02::{Input, RPS, STATE};
 pub fn solve(input: &Input) -> u32 {
     input
         .iter()
-        .map(|s| parse_rps_game(*s))
-        .map(|g| evalute_game(g.0, g.1))
-        .map(|wld| (wld.0 as u32) + (wld.1 as u32))
+        .map(|line| parse_rps_game(*line))
+        .map(|game| evalute_game(game.0, game.1))
+        .map(|outcome| (outcome.0 as u32) + (outcome.1 as u32))
         .sum()
 }
 
 fn parse_rps_game(game: (&str, &str)) -> (RPS, STATE) {
-    let a: RPS = match game.0 {
+    let opponent_choice: RPS = match game.0 {
         "A" => RPS::Rock,
         "B" => RPS::Paper,
         "C" => RPS::Scissors,
         _ => panic!(),
     };
-    let b: STATE = match game.1 {
+    let player_choice: STATE = match game.1 {
         "X" => STATE::Lost,
         "Y" => STATE::Draw,
         "Z" => STATE::Win,
         _ => panic!(),
     };
 
-    (a, b)
+    (opponent_choice, player_choice)
 }
 
-fn evalute_game(opp: RPS, wld: STATE) -> (STATE, RPS) {
-    let what = match opp {
-        RPS::Rock => match wld {
+fn evalute_game(opponent_choice: RPS, player_needs_to: STATE) -> (STATE, RPS) {
+    let player_choice = match opponent_choice {
+        RPS::Rock => match player_needs_to {
             STATE::Win => RPS::Paper,
             STATE::Lost => RPS::Scissors,
             _ => RPS::Rock,
         },
-        RPS::Paper => match wld {
+        RPS::Paper => match player_needs_to {
             STATE::Win => RPS::Scissors,
             STATE::Lost => RPS::Rock,
             _ => RPS::Paper,
         },
-        RPS::Scissors => match wld {
+        RPS::Scissors => match player_needs_to {
             STATE::Win => RPS::Rock,
             STATE::Lost => RPS::Paper,
             _ => RPS::Scissors,
         },
     };
 
-    (wld, what)
+    (player_needs_to, player_choice)
 }
