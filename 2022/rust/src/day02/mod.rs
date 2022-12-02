@@ -17,7 +17,7 @@ pub enum RPS {
 pub enum STATE {
     Win = 6,
     Draw = 3,
-    Lost = 0,
+    Lose = 0,
 }
 
 pub fn run(part: Part) -> u32 {

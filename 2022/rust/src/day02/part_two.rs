@@ -17,7 +17,7 @@ fn parse_rps_game(game: (&str, &str)) -> (RPS, STATE) {
         _ => panic!(),
     };
     let player_choice: STATE = match game.1 {
-        "X" => STATE::Lost,
+        "X" => STATE::Lose,
         "Y" => STATE::Draw,
         "Z" => STATE::Win,
         _ => panic!(),
@@ -29,11 +29,11 @@ fn parse_rps_game(game: (&str, &str)) -> (RPS, STATE) {
 fn evalute_game(opponent_choice: RPS, player_needs_to: STATE) -> (STATE, RPS) {
    let player_choice = match (opponent_choice, player_needs_to) {
             (RPS::Rock, STATE::Win) => RPS::Paper,
-            (RPS::Rock, STATE::Lost) => RPS::Scissors,
+            (RPS::Rock, STATE::Lose) => RPS::Scissors,
             (RPS::Paper, STATE::Win) => RPS::Scissors,
-            (RPS::Paper, STATE::Lost) => RPS::Rock,
+            (RPS::Paper, STATE::Lose) => RPS::Rock,
             (RPS::Scissors, STATE::Win) => RPS::Rock,
-            (RPS::Scissors, STATE::Lost) => RPS::Paper,
+            (RPS::Scissors, STATE::Lose) => RPS::Paper,
             (_, STATE::Draw) => opponent_choice
         };
 
