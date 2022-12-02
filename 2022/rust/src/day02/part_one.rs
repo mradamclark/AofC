@@ -26,24 +26,16 @@ fn parse_rps_game(line: (&str, &str)) -> (RPS, RPS) {
     (opponent_choice, player_choise)
 }
 
-fn evalute_game(opponent_choice: RPS, player_choise: RPS) -> (STATE, RPS) {
-    let win_lose_draw = match opponent_choice {
-        RPS::Rock => match player_choise {
-            RPS::Paper => STATE::Win,
-            RPS::Scissors => STATE::Lost,
-            _ => STATE::Draw,
-        },
-        RPS::Paper => match player_choise {
-            RPS::Rock => STATE::Lost,
-            RPS::Scissors => STATE::Win,
-            _ => STATE::Draw,
-        },
-        RPS::Scissors => match player_choise {
-            RPS::Rock => STATE::Win,
-            RPS::Paper => STATE::Lost,
-            _ => STATE::Draw,
-        },
+fn evalute_game(opponent_choice: RPS, player_choice: RPS) -> (STATE, RPS) {
+    let player_outcome = match (opponent_choice, player_choice) {
+        (RPS::Rock, RPS::Paper) => STATE::Win,
+        (RPS::Rock, RPS::Scissors) => STATE::Lost,
+        (RPS::Paper, RPS::Rock) => STATE::Lost,
+        (RPS::Paper, RPS::Scissors) => STATE::Win,
+        (RPS::Scissors, RPS::Rock) => STATE::Win,
+        (RPS::Scissors, RPS::Paper) => STATE::Lost,
+        _ => STATE::Draw,
     };
 
-    (win_lose_draw, player_choise)
+    (player_outcome, player_choice)
 }

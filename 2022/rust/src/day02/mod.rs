@@ -13,7 +13,7 @@ pub enum RPS {
     Scissors = 3,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub enum STATE {
     Win = 6,
     Draw = 3,
