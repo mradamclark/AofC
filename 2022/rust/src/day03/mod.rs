@@ -4,7 +4,7 @@ pub mod part_two;
 
 use crate::Part;
 
-pub type Input<'a> = Vec<(&'a str, &'a str)>;
+pub type Input<'a> = Vec<&'a str>;
 
 pub fn run(part: Part) -> u32 {
     let input = input::read();

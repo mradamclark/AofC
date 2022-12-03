@@ -9,12 +9,5 @@ pub fn read() -> Input<'static> {
     INPUT
         .trim()
         .split("\n")
-        .map(|l| parse_rucksack(l))
         .collect()
-}
-
-fn parse_rucksack(contents: &str) -> (&str, &str) {
-    let mid = contents.len() / 2;
-    let rucksack: (&str, &str) = contents.split_at(mid);
-    rucksack
 }
