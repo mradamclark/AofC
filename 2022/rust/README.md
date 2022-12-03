@@ -8,12 +8,10 @@
 <h3>My Stats</h3>
 <p>time is not how long i took to do it, just how long after the problem became available i got my answer in.</p>
 <pre>
-      --------Part 1--------   --------Part 2--------  -----Comments --------------------------------------------
+      --------Part 1--------   --------Part 2-------- 
 Day       Time   Rank  Score       Time   Rank  Score
-  1   08:35:28  61140      0   09:19:50  61828      0  * First time ever builind a rust thing.
-                                                       * Didn't spend any time prior to AoC using rust
-						                   * A little more cryptic than I was hoping for.
-  2   01:30:10  20340      0   01:58:16  20939      0  * Rust is making more sense
-                                                       * Some cleanup needs could be done.
-                                                       * Still not fast enough to get points on the main leader board.                                                     
+  1   08:35:28  61140      0   09:19:50  61828      0 
+  2   01:30:10  20340      0   01:58:16  20939      0 
+  3   01:21:54  17009      0   02:13:01  18620      0 
+                                                                                                                                          
 </pre>
