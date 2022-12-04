@@ -1,9 +1,8 @@
-def p1(f):
-    l = [sum(int(i) for i in s.split()) for s in f.read().split("\n\n")]
-    return max(l)
 
-def p2(f):
-    l = [sum(int(i) for i in s.split()) for s in f.read().split("\n\n")]
+print("AOC 2022 Day 01")
+with open('../input/day01/input.txt') as file:
+    l = [sum(int(i) for i in s.split()) for s in file.read().split("\n\n")]
+    print('\tP1  = ' + str(max(l)))
 
     total = 0
     for _ in range(1,4):
@@ -11,11 +10,4 @@ def p2(f):
         total += n
         l.remove(n)
     
-    return total
-
-if __name__ == '__main__':
-    with open('../input/day01/input.txt') as file:
-        print('P1  = ' + str(p1(file)))
-        
-    with open('../input/day01/input.txt') as file:
-        print('P2  = ' + str(p2(file)))
+    print('\tP2  = ' + str(total))
