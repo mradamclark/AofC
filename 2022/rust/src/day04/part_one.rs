@@ -1,4 +1,4 @@
-use crate::day03::Input;
+use crate::day04::{Input};
 use std::collections::HashSet;
 
 pub fn solve(input: &Input) -> u32 {
@@ -17,13 +17,13 @@ fn score_chars(shared_items: HashSet<char>) -> u32 {
             'a'..='z' => (*i as u32) - 96,
             'A'..='Z' => ((*i as u32) - 65) + 27,
             _ => panic!(),
-        })
-        .collect();
+            })
+            .collect();
     scores.iter().sum()
 }
 
 fn common_chars(s1: &str, s2: &str) -> HashSet<char> {
-    let mut shared: HashSet<char> = HashSet::new();
+    let mut shared: HashSet<char> = HashSet::new(); 
 
     for c in s1.chars() {
         if s2.contains(c) {
@@ -31,4 +31,4 @@ fn common_chars(s1: &str, s2: &str) -> HashSet<char> {
         }
     }
     shared
-}
+ }

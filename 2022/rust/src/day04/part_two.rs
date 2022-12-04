@@ -1,4 +1,4 @@
-use crate::day03::Input;
+use crate::day04::{Input};
 
 pub fn solve(input: &Input) -> u32 {
     input
@@ -9,10 +9,10 @@ pub fn solve(input: &Input) -> u32 {
 }
 
 fn score_badge(c: char) -> u32 {
-    match c {
+    match c { 
         'a'..='z' => (c as u32) - 96,
         'A'..='Z' => ((c as u32) - 65) + 27,
-        _ => panic!(),
+        _ => panic!()
     }
 }
 
@@ -27,4 +27,4 @@ fn find_badge(group: &[&str]) -> char {
         }
     }
     badge
-}
+ }
