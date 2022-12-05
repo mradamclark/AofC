@@ -1,4 +1,4 @@
-
+print("AOC 2022 Day 04")
 assignments = []
 with open("../input/day04/input.txt") as f:
     assignments = [x.strip() for x in f.readlines()]
@@ -17,6 +17,6 @@ for asg in assignments:
     if elfA.issubset(elfB) or elfB.issubset(elfA):
         fully_contained += 1
         
-print("AofC 2022 d04 p1: " + str(fully_contained))
-print("AofC 2022 d04 p2: " + str(len(assignments) - disjoint))    
+print("\tP1: " + str(fully_contained))
+print("\tP2: " + str(len(assignments) - disjoint))    
     
