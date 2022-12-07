@@ -17,6 +17,7 @@ fn main() {
         3 => day03::run,
         4 => day04::run,
         5 => day05::run,
+        6 => day06::run,
         _ => panic!("Day {} doesn't exist in AofC calendar", day),
     };
 
