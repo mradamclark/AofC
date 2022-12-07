@@ -5,7 +5,7 @@ use std::borrow::BorrowMut;
 
 use crate::day05::Input;
 
-const INPUT: &str = include_str!("../../../input/day05/test.txt");
+const INPUT: &str = include_str!("../../../input/day05/input.txt");
 
 pub fn read() -> Input {
 
@@ -88,9 +88,18 @@ impl Default for CargoStack {
     }
 }
 impl CargoStack {
-    fn push(&mut self, ch: char) {
+    pub fn push(&mut self, ch: char) {
         self.cargo[self.height] = ch;
-        self.height = self.height + 1;
+        self.height += 1;
+    }
+
+    pub fn pop(&mut self) -> char {
+        if self.height == 0 {
+            return '.'
+        }
+
+        self.height -= 1;
+        self.cargo[self.height]
     }
 }
 impl Display for CargoStack {
@@ -128,12 +137,12 @@ impl Display for CargoStacks{
 
 #[derive(Copy, Clone)]
 pub struct Instruction {
-    amount: u32,
-    from: u32,
-    to: u32,
+    pub amount: u32,
+    pub from: u8,
+    pub to: u8,
 }
-impl From<(u32, u32, u32)> for Instruction {
-    fn from(value: (u32, u32, u32)) -> Self {
+impl From<(u32, u8, u8)> for Instruction {
+    fn from(value: (u32, u8, u8)) -> Self {
         Self {
             amount: value.0,
             from: value.1,
@@ -152,18 +161,18 @@ mod parse_cargo_instr {
     use anyhow::{anyhow, Result};
     use nom::{
         bytes::complete::take_while,
-        character::complete::u32,
+        character::complete::{u8,u32},
         combinator::into,
         sequence::{preceded, tuple},
         IResult,
     };
 
-    fn dest_stack(l: &str) -> IResult<&str, u32>{
-        preceded(take_while(|c: char| c.is_alphabetic() || c.is_whitespace()), u32)(l)
+    fn dest_stack(l: &str) -> IResult<&str, u8>{
+        preceded(take_while(|c: char| c.is_alphabetic() || c.is_whitespace()), u8)(l)
     }
 
-    fn from_stack(l: &str) -> IResult<&str, u32>{
-        preceded(take_while(|c: char| c.is_alphabetic() || c.is_whitespace()), u32)(l)
+    fn from_stack(l: &str) -> IResult<&str, u8>{
+        preceded(take_while(|c: char| c.is_alphabetic() || c.is_whitespace()), u8)(l)
     }
 
     fn cargo_to_move(l: &str) -> IResult<&str, u32>{
