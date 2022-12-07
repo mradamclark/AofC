@@ -1,7 +1,7 @@
-use crate::day01::Input;
+use crate::day01::{Input, Output};
 
-pub fn solve(input: &Input) -> u32 {
+pub fn solve(input: &Input) -> Output {
     let mut v: Vec<u32> = (*input).to_vec();
     v.sort_by(|a, b| b.cmp(a));
-    return v[0] + v[1] + v[2];
+    return Output::U32(v[0] + v[1] + v[2]);
 }

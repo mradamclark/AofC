@@ -1,13 +1,15 @@
-use crate::day03::Input;
+use crate::day03::{Input, Output};
 use std::collections::HashSet;
 
-pub fn solve(input: &Input) -> u32 {
-    input
+pub fn solve(input: &Input) -> Output {
+    let r = input
         .iter()
         .map(|contents| contents.split_at(contents.len() / 2))
         .map(|rucksack| common_chars(rucksack.0, rucksack.1))
         .map(|h| score_chars(h))
-        .sum::<u32>()
+        .sum::<u32>();
+    
+    Output::U32(r)
 }
 
 fn score_chars(shared_items: HashSet<char>) -> u32 {

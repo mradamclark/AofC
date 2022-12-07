@@ -1,14 +1,15 @@
-use crate::day03::Input;
+use crate::day03::{Input, Output};
 
-pub fn solve(input: &Input) -> u32 {
-    input
+pub fn solve(input: &Input) -> Output {
+    let r = input
         .chunks(3)
         .map(|group| find_badge(group.into()))
         .map(|badge| score_badge(badge))
-        .sum::<u32>()
+        .sum::<u32>();
+    Output::U32(r)
 }
 
-fn score_badge(c: char) -> u32 {
+fn score_badge(c: char) ->  u32 {
     match c {
         'a'..='z' => (c as u32) - 96,
         'A'..='Z' => ((c as u32) - 65) + 27,

@@ -14,4 +14,6 @@ edition = "2021"
  path = "src/bin.rs"
 
 [dependencies]
+anyhow = "1.0.66"
 clap = { version = "4.0.22", features = ["derive"] }
+nom = "7.1.1"

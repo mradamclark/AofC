@@ -1,12 +1,14 @@
-use crate::day02::{Input, RPS, STATE};
+use crate::day02::{Input, Output, RPS, STATE};
 
-pub fn solve(input: &Input) -> u32 {
-    input
+pub fn solve(input: &Input) -> Output {
+    let r = input
         .iter()
         .map(|line| parse_rps_game(*line))
         .map(|game| evalute_game(game.0, game.1))
         .map(|outcome| (outcome.0 as u32) + (outcome.1 as u32))
-        .sum()
+        .sum::<u32>();
+    
+    Output::U32(r)
 }
 
 fn parse_rps_game(line: (&str, &str)) -> (RPS, RPS) {
