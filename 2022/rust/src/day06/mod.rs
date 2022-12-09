@@ -2,7 +2,7 @@ pub mod input;
 pub mod part_one;
 pub mod part_two;
 
-use crate::{Part, Output};
+use crate::{Output, Part};
 
 pub type Input<'a> = &'a str;
 
@@ -13,5 +13,3 @@ pub fn run(part: Part) -> Output {
         Part::Two => part_two::solve(&input),
     }
 }
-
-

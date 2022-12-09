@@ -2,10 +2,10 @@ pub mod input;
 pub mod part_one;
 pub mod part_two;
 
-use std::collections::HashMap;
 use nom::character::complete::u32;
+use std::collections::HashMap;
 
-use crate::{Part, Output};
+use crate::{Output, Part};
 
 pub type Input = HashMap<String, u32>;
 
@@ -16,5 +16,3 @@ pub fn run(part: Part) -> Output {
         Part::Two => part_two::solve(&input),
     }
 }
-
-

@@ -6,7 +6,7 @@ pub mod input;
 pub mod part_one;
 pub mod part_two;
 
-use crate::{Part, Output};
+use crate::{Output, Part};
 use input::{CargoStack, CargoStacks, Instruction};
 
 pub type Input = (CargoStacks, Vec<Instruction>);
@@ -18,5 +18,3 @@ pub fn run(part: Part) -> Output {
         Part::Two => part_two::solve(&input),
     }
 }
-
-

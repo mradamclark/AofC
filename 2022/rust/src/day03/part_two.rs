@@ -9,7 +9,7 @@ pub fn solve(input: &Input) -> Output {
     Output::U32(r)
 }
 
-fn score_badge(c: char) ->  u32 {
+fn score_badge(c: char) -> u32 {
     match c {
         'a'..='z' => (c as u32) - 96,
         'A'..='Z' => ((c as u32) - 65) + 27,

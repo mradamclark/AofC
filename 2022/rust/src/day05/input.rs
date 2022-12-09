@@ -1,14 +1,13 @@
-use std::cell::RefCell;
-use std::ops::{Index, IndexMut};
-use std::fmt::{Display, Formatter, Result};
 use std::borrow::BorrowMut;
+use std::cell::RefCell;
+use std::fmt::{Display, Formatter, Result};
+use std::ops::{Index, IndexMut};
 
 use crate::day05::Input;
 
 const INPUT: &str = include_str!("../../../input/day05/input.txt");
 
 pub fn read() -> Input {
-
     // split the input data into two chunks.
     // 1. set cargo
     // 2. set of movement instructions.
@@ -39,7 +38,6 @@ mod parse_cargo_map {
         sequence::delimited,
         IResult,
     };
-    
 
     fn cargo_item(s: &str) -> IResult<&str, char> {
         let mut label = satisfy(|c| c.is_ascii_uppercase());
@@ -77,7 +75,7 @@ mod parse_cargo_map {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct CargoStack {
     pub cargo: [char; 64],
-    pub height: usize
+    pub height: usize,
 }
 impl Default for CargoStack {
     fn default() -> Self {
@@ -95,7 +93,7 @@ impl CargoStack {
 
     pub fn pop(&mut self) -> char {
         if self.height == 0 {
-            return '.'
+            return '.';
         }
 
         self.height -= 1;
@@ -127,7 +125,7 @@ impl IndexMut<usize> for CargoStacks {
         &mut self.0[index - 1]
     }
 }
-impl Display for CargoStacks{
+impl Display for CargoStacks {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         self.0.iter().fold(Ok(()), |result, cargostack| {
             result.and_then(|_| writeln!(f, "{}", cargostack))
@@ -146,7 +144,7 @@ impl From<(u32, u8, u8)> for Instruction {
         Self {
             amount: value.0,
             from: value.1,
-            to: value.2
+            to: value.2,
         }
     }
 }
@@ -161,30 +159,38 @@ mod parse_cargo_instr {
     use anyhow::{anyhow, Result};
     use nom::{
         bytes::complete::take_while,
-        character::complete::{u8,u32},
+        character::complete::{u32, u8},
         combinator::into,
         sequence::{preceded, tuple},
         IResult,
     };
 
-    fn dest_stack(l: &str) -> IResult<&str, u8>{
-        preceded(take_while(|c: char| c.is_alphabetic() || c.is_whitespace()), u8)(l)
+    fn dest_stack(l: &str) -> IResult<&str, u8> {
+        preceded(
+            take_while(|c: char| c.is_alphabetic() || c.is_whitespace()),
+            u8,
+        )(l)
     }
 
-    fn from_stack(l: &str) -> IResult<&str, u8>{
-        preceded(take_while(|c: char| c.is_alphabetic() || c.is_whitespace()), u8)(l)
+    fn from_stack(l: &str) -> IResult<&str, u8> {
+        preceded(
+            take_while(|c: char| c.is_alphabetic() || c.is_whitespace()),
+            u8,
+        )(l)
     }
 
-    fn cargo_to_move(l: &str) -> IResult<&str, u32>{
-        preceded(take_while(|c: char| c.is_alphabetic() || c.is_whitespace()), u32)(l)
+    fn cargo_to_move(l: &str) -> IResult<&str, u32> {
+        preceded(
+            take_while(|c: char| c.is_alphabetic() || c.is_whitespace()),
+            u32,
+        )(l)
     }
 
-    fn instruction(l: &str) -> IResult<&str, Instruction>{
+    fn instruction(l: &str) -> IResult<&str, Instruction> {
         into(tuple((cargo_to_move, from_stack, dest_stack)))(l)
-           
     }
 
-    pub fn parse(l: &str) -> Result<Instruction>  {
+    pub fn parse(l: &str) -> Result<Instruction> {
         let (_, result) = instruction(l).map_err(|_| anyhow!("hmm bad instructions"))?;
         Ok(result)
     }

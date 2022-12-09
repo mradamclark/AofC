@@ -8,7 +8,7 @@ pub fn solve(input: &Input) -> Output {
         .map(|rucksack| common_chars(rucksack.0, rucksack.1))
         .map(|h| score_chars(h))
         .sum::<u32>();
-    
+
     Output::U32(r)
 }
 

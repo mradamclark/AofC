@@ -1,4 +1,4 @@
-use crate::day05::{CargoStack, Input, Output, CargoStacks, Instruction};
+use crate::day05::{CargoStack, CargoStacks, Input, Instruction, Output};
 
 pub fn solve(input: &Input) -> Output {
     let mut cargo_map: CargoStacks = input.0.clone();
@@ -20,6 +20,6 @@ pub fn solve(input: &Input) -> Output {
         let ch = stack.pop();
         out.push(ch);
     }
-    
+
     Output::String(out)
 }

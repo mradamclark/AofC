@@ -7,7 +7,7 @@ pub fn solve(input: &Input) -> Output {
         .map(|game| evalute_game(game.0, game.1))
         .map(|outcome| (outcome.0 as u32) + (outcome.1 as u32))
         .sum::<u32>();
-    
+
     Output::U32(r)
 }
 
