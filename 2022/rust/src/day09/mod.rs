@@ -4,7 +4,15 @@ pub mod part_two;
 
 use crate::{Output, Part};
 
-pub type Input = Vec<Vec<(u32, bool, u32)>>;
+#[derive(Clone, Copy, Debug)]
+pub enum Direction {
+    Up,
+    Right,
+    Down,
+    Left,
+}
+
+pub type Input = Vec<(Direction, u32)>;
 
 pub fn run(part: Part) -> Output {
     let input = input::read();
