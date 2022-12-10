@@ -3,7 +3,7 @@ use nom::character::complete::u8;
 
 use crate::day08::Input;
 
-const INPUT: &str = include_str!("../../../input/day08/input.txt");
+const INPUT: &str = include_str!("../../../../input/day08/input.txt");
 
 pub fn read() -> Input {
     INPUT

@@ -5,7 +5,7 @@ use std::ops::{Index, IndexMut};
 
 use crate::day05::Input;
 
-const INPUT: &str = include_str!("../../../input/day05/input.txt");
+const INPUT: &str = include_str!("../../../../input/day05/input.txt");
 
 pub fn read() -> Input {
     // split the input data into two chunks.

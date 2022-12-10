@@ -3,7 +3,7 @@ use std::io::BufReader;
 
 use crate::day02::{Input, RPS};
 
-const INPUT: &str = include_str!("../../../input/day02/input.txt");
+const INPUT: &str = include_str!("../../../../input/day02/input.txt");
 
 pub fn read() -> Input<'static> {
     INPUT

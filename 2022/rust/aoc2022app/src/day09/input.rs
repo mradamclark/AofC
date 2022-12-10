@@ -3,7 +3,7 @@ use nom::character::complete::u8;
 
 use crate::day09::{Direction, Input, Output};
 
-const INPUT: &str = include_str!("../../../input/day09/input.txt");
+const INPUT: &str = include_str!("../../../../input/day09/input.txt");
 pub fn read() -> Input {
     let (_, instructions) = instruction_parser::parse(INPUT).unwrap();
     instructions

@@ -2,7 +2,7 @@ use crate::day07::Input;
 use nom::character::complete::u32;
 use std::collections::HashMap;
 
-const INPUT: &str = include_str!("../../../input/day07/input.txt");
+const INPUT: &str = include_str!("../../../../input/day07/input.txt");
 
 pub fn read() -> Input {
     let mut dir_sizes: HashMap<String, u32> = HashMap::new();
