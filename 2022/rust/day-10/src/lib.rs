@@ -103,7 +103,7 @@ impl Handheld {
     fn do_instr(self: &mut Self, instruction: &Instruction) {
         let sprite_pos = (self.x - 1)..=(self.x + 1);
         for i in 0..instruction.cycles() {
-            let print_pos = self.cycle + i as i32;
+            let print_pos = (self.cycle + i as i32) % 40;
             if sprite_pos.contains(&print_pos) {
                 self.pixels.push_str("#");
             } else {
