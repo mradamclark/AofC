@@ -155,7 +155,8 @@ fn get_magic_number(monkeys: &Vec<Monkey>) -> u64 {
             },
             _ => panic!("oops 2"),
         })
-        .product::<u64>();
+        .collect::<u64>();
+    
     magic_n
 }
 
