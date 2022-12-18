@@ -1,7 +1,4 @@
-use std::{
-    collections::VecDeque,
-    fmt::{self, Display},
-};
+use std::collections::VecDeque;
 
 use nom::{
     bytes::complete::tag,
