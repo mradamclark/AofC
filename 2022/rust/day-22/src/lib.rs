@@ -75,15 +75,17 @@ impl Map {
         (mut row, mut col, dir): (usize, usize, Direction),
         steps: usize,
     ) -> (usize, usize) {
-        print!("Move {dir:?} {steps:?} steps");
+        println!("Move {dir:?} {steps:?} steps");
 
         let forward = [(0, 1), (1, 0), (0, -1), (-1, 0)];
         let reverse = [(0, -1), (-1, 0), (0, 1), (1, 0)];
 
+        print!("\t step onto ({row:?},{col:?}) -> ");
         for _s in 1..=steps {
             let delta = forward[dir as usize];
             (row, col) = self.idx_wrap((row, col), delta);
             (row, col) = self.idx_region_wrap(row, col, dir);
+            print!("({row:?},{col:?}) -> ");
             if self[(row, col)] == '#' {
                 let delta = reverse[dir as usize];
                 (row, col) = self.idx_wrap((row, col), delta);
@@ -91,7 +93,8 @@ impl Map {
                 break;
             }
         }
-        print!(" stopping at ({row:?},{col:?}).\n");
+        print!("({row:?},{col:?})\n");
+        // print!(" stopping at ({row:?},{col:?}).\n");
         (row, col)
     }
 
@@ -106,12 +109,6 @@ impl Map {
         let mut nc = col;
         let mut nr = row;
 
-        // println!(
-        //     "(r,c) = {row:?},{col:?}, nr,nc = {nr:?},{nc:?}, {dir:?}, [{}], isSpace={:?}",
-        //     self[(nr, nc)],
-        //     self[(nr, nc)] == ' '
-        // );
-
         if self[(nr, nc)] == ' ' {
             loop {
                 let pr = nr;
@@ -123,12 +120,7 @@ impl Map {
                     Direction::Up => (1, 0),
                 };
                 (nr, nc) = self.idx_wrap((nr, nc), delta);
-                // print!("\tnr,nc = {nr:?},{nc:?}, {dir:?}");
-                // print!(
-                //     ", [{}], isSpace={:?}\n",
-                //     self[(nr, nc)],
-                //     self[(nr, nc)] == ' '
-                // );
+
                 if self[(nr, nc)] == ' ' {
                     nr = pr;
                     nc = pc;
@@ -169,17 +161,13 @@ fn right(dir: &Direction) -> Direction {
 pub fn process_part1(input: &str) -> String {
     let (_s, (map, instructions)) = parse(input).unwrap();
 
-    let mut row: usize = 0;
-    let mut col: usize = 0;
+    let (mut row, mut col) = (0, 0);
     let mut dir = Direction::Right;
 
-    // println!("({row:?},{col:?}) = {:?}", map[(row, col)]);
     while map[(row, col)] != '.' {
-        // println!("({row:?},{col:?}) = {:?}", map[(row, col)]);
         col += 1;
     }
 
-    // println!("Instructions: {:?}", instructions);
     println!(
         "start: ({row:?},{col:?}), max: ({:?},{:?})",
         map.rmax, map.cmax
@@ -210,7 +198,7 @@ pub fn process_part2(input: &str) -> String {
 }
 #[cfg(test)]
 mod tests {
-    use crate::{Direction, Map};
+    use crate::{parse, Direction, Map};
 
     const INPUT: &str = include_str!("../data/test.txt");
     #[test]
@@ -318,5 +306,33 @@ mod tests {
         let col: usize = 3;
         let (nr, nc) = map.idx_region_wrap(row, col, Direction::Up);
         assert_eq!((nr, nc), (2, col));
+    }
+
+    #[test]
+    fn test_map_idx_region_wrap_test_input_example() {
+        let input = "        ...#
+        .#..
+        #...
+        ....
+...#.......#
+........#...
+..#....#....
+..........#.   
+        ...#....
+        .....#..
+        .#......
+        ......#.
+
+10R5L5R10L4R5L5";
+
+        let (_s, (map, _instructions)) = parse(input).unwrap();
+
+        let position = (6, 11);
+        let expected = (6, 0);
+
+        let (r, c) = map.idx_wrap(position, (0, 1));
+        dbg!(r, c);
+        let (r, c) = map.idx_region_wrap(r, c, Direction::Right);
+        assert_eq!((r, c), expected);
     }
 }
