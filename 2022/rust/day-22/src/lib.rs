@@ -78,20 +78,16 @@ impl Map {
         println!("Move {dir:?} {steps:?} steps");
 
         let forward = [(0, 1), (1, 0), (0, -1), (-1, 0)];
-        let reverse = [(0, -1), (-1, 0), (0, 1), (1, 0)];
 
-        print!("\t step onto ({row:?},{col:?}) -> ");
+        print!("\t step onto ({row:?},{col:?})->");
         for _s in 1..=steps {
             let delta = forward[dir as usize];
-            (row, col) = self.idx_wrap((row, col), delta);
-            (row, col) = self.idx_region_wrap(row, col, dir);
-            print!("({row:?},{col:?}) -> ");
-            if self[(row, col)] == '#' {
-                let delta = reverse[dir as usize];
-                (row, col) = self.idx_wrap((row, col), delta);
-                (row, col) = self.idx_region_wrap(row, col, dir);
+            let (nr, nc) = self.idx_region_wrap((row, col), delta, dir);
+            print!("({row:?},{col:?})->");
+            if self[(nr, nc)] == '#' {
                 break;
             }
+            (row, col) = (nr, nc);
         }
         print!("({row:?},{col:?})\n");
         // print!(" stopping at ({row:?},{col:?}).\n");
@@ -105,22 +101,24 @@ impl Map {
         (nr as usize, nc as usize)
     }
 
-    fn idx_region_wrap(&self, row: usize, col: usize, dir: Direction) -> (usize, usize) {
-        let mut nc = col;
-        let mut nr = row;
-
+    fn idx_region_wrap(
+        &self,
+        (row, col): (usize, usize),
+        (dr, dc): (i64, i64),
+        dir: Direction,
+    ) -> (usize, usize) {
+        let mut nr = ((((row as i64 + dr) % self.rmax) + self.rmax) % self.rmax) as usize;
+        let mut nc = ((((col as i64 + dc) % self.cmax) + self.cmax) % self.cmax) as usize;
+        // println!("{nr:?}, {nc:?}");
+        let reverse = [(0, -1), (-1, 0), (0, 1), (1, 0)];
         if self[(nr, nc)] == ' ' {
+            // println!("{nr:?}, {nc:?}");
             loop {
                 let pr = nr;
                 let pc = nc;
-                let delta: (i64, i64) = match dir {
-                    Direction::Right => (0, -1),
-                    Direction::Down => (-1, 0),
-                    Direction::Left => (0, 1),
-                    Direction::Up => (1, 0),
-                };
+                let delta = reverse[dir as usize];
                 (nr, nc) = self.idx_wrap((nr, nc), delta);
-
+                // println!("{nr:?}, {nc:?}");
                 if self[(nr, nc)] == ' ' {
                     nr = pr;
                     nc = pc;
@@ -254,23 +252,23 @@ mod tests {
         };
 
         let row: usize = 3;
-        let col: usize = 5;
-        let (nr, nc) = map.idx_region_wrap(row, col, Direction::Right);
+        let col: usize = 4;
+        let (nr, nc) = map.idx_region_wrap((row, col), (0, 1), Direction::Right);
         assert_eq!((nr, nc), (3, 2));
 
         let row: usize = 3;
-        let col: usize = 1;
-        let (nr, nc) = map.idx_region_wrap(row, col, Direction::Left);
+        let col: usize = 2;
+        let (nr, nc) = map.idx_region_wrap((row, col), (0, -1), Direction::Left);
         assert_eq!((nr, nc), (3, 4));
 
-        let row: usize = 5;
+        let row: usize = 4;
         let col: usize = 3;
-        let (nr, nc) = map.idx_region_wrap(row, col, Direction::Down);
+        let (nr, nc) = map.idx_region_wrap((row, col), (1, 0), Direction::Down);
         assert_eq!((nr, nc), (2, 3));
 
-        let row: usize = 1;
+        let row: usize = 2;
         let col: usize = 3;
-        let (nr, nc) = map.idx_region_wrap(row, col, Direction::Up);
+        let (nr, nc) = map.idx_region_wrap((row, col), (-1, 0), Direction::Up);
         assert_eq!((nr, nc), (4, 3));
     }
 
@@ -288,23 +286,23 @@ mod tests {
         };
 
         let row: usize = 3;
-        let col: usize = 5;
-        let (nr, nc) = map.idx_region_wrap(row, col, Direction::Right);
+        let col: usize = 4;
+        let (nr, nc) = map.idx_region_wrap((row, col), (0, 1), Direction::Right);
         assert_eq!((nr, nc), (row, 4));
 
         let row: usize = 3;
-        let col: usize = 1;
-        let (nr, nc) = map.idx_region_wrap(row, col, Direction::Left);
+        let col: usize = 2;
+        let (nr, nc) = map.idx_region_wrap((row, col), (0, -1), Direction::Left);
         assert_eq!((nr, nc), (row, 2));
 
-        let row: usize = 5;
+        let row: usize = 4;
         let col: usize = 3;
-        let (nr, nc) = map.idx_region_wrap(row, col, Direction::Down);
+        let (nr, nc) = map.idx_region_wrap((row, col), (1, 0), Direction::Down);
         assert_eq!((nr, nc), (4, col));
 
-        let row: usize = 1;
+        let row: usize = 2;
         let col: usize = 3;
-        let (nr, nc) = map.idx_region_wrap(row, col, Direction::Up);
+        let (nr, nc) = map.idx_region_wrap((row, col), (-1, 0), Direction::Up);
         assert_eq!((nr, nc), (2, col));
     }
 
@@ -330,9 +328,7 @@ mod tests {
         let position = (6, 11);
         let expected = (6, 0);
 
-        let (r, c) = map.idx_wrap(position, (0, 1));
-        dbg!(r, c);
-        let (r, c) = map.idx_region_wrap(r, c, Direction::Right);
+        let (r, c) = map.idx_region_wrap(position, (0, 1), Direction::Right);
         assert_eq!((r, c), expected);
     }
 }
