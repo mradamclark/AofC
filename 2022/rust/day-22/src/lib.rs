@@ -1,5 +1,3 @@
-use std::ops::Index;
-
 use nom::{
     branch::alt,
     bytes::complete::tag,
@@ -10,6 +8,7 @@ use nom::{
     sequence::{separated_pair, terminated},
     *,
 };
+use std::{collections::HashMap, ops::Index};
 use tracing::instrument;
 
 fn intructions(s: &str) -> IResult<&str, Vec<Instruction>> {
@@ -28,17 +27,19 @@ fn grid(s: &str) -> IResult<&str, Map> {
     let rows = tiles.len();
     let longest = tiles.iter().map(|t| t.len()).max().unwrap();
 
-    let mut ntiles = Vec::<char>::new();
-    for t in tiles {
-        let mut nt = t.clone();
-        nt.resize(longest, ' ');
-        ntiles.append(&mut nt);
-    }
-
     Ok((
         s,
         Map {
-            data: ntiles,
+            data: tiles
+                .into_iter()
+                .enumerate()
+                .flat_map(|(r, l)| {
+                    l.into_iter()
+                        .enumerate()
+                        .filter(|(_, ch)| *ch != ' ')
+                        .map(move |(c, ch)| ((r, c), ch))
+                })
+                .collect(),
             rmax: rows as i64,
             cmax: longest as i64,
         },
@@ -65,7 +66,7 @@ enum Direction {
 }
 
 struct Map {
-    data: Vec<char>,
+    data: HashMap<(usize, usize), char>,
     rmax: i64,
     cmax: i64,
 }
@@ -75,21 +76,21 @@ impl Map {
         (mut row, mut col, dir): (usize, usize, Direction),
         steps: usize,
     ) -> (usize, usize) {
-        println!("Move {dir:?} {steps:?} steps");
+        // println!("Move {dir:?} {steps:?} steps");
 
         let forward = [(0, 1), (1, 0), (0, -1), (-1, 0)];
 
-        print!("\t step onto ({row:?},{col:?})->");
+        // print!("\t step onto ({row:?},{col:?})->");
         for _s in 1..=steps {
             let delta = forward[dir as usize];
             let (nr, nc) = self.idx_region_wrap((row, col), delta, dir);
-            print!("({row:?},{col:?})->");
+            // print!("({row:?},{col:?})->");
             if self[(nr, nc)] == '#' {
                 break;
             }
             (row, col) = (nr, nc);
         }
-        print!("({row:?},{col:?})\n");
+        // prcarint!("({row:?},{col:?})\n");
         // print!(" stopping at ({row:?},{col:?}).\n");
         (row, col)
     }
@@ -133,7 +134,7 @@ impl Index<(usize, usize)> for Map {
     type Output = char;
     fn index(&self, idx: (usize, usize)) -> &char {
         // println!("\t\t[{:?},{:?}]", idx.0, idx.1);
-        &self.data[idx.0 * self.cmax as usize + idx.1]
+        *(&self.data.get(&idx).unwrap_or(&' '))
     }
 }
 
@@ -166,21 +167,21 @@ pub fn process_part1(input: &str) -> String {
         col += 1;
     }
 
-    println!(
-        "start: ({row:?},{col:?}), max: ({:?},{:?})",
-        map.rmax, map.cmax
-    );
+    // println!(
+    //     "start: ({row:?},{col:?}), max: ({:?},{:?})",
+    //     map.rmax, map.cmax
+    // );
     for instr in instructions.iter() {
         match instr {
             Instruction::Move(n) => {
                 (row, col) = map.step((row, col, dir), *n);
             }
             Instruction::Left => {
-                println!("Turn Left");
+                // println!("Turn Left");
                 dir = left(&dir);
             }
             Instruction::Right => {
-                println!("Turn Right");
+                // println!("Turn Right");
                 dir = right(&dir);
             }
         }
@@ -196,27 +197,43 @@ pub fn process_part2(input: &str) -> String {
 }
 #[cfg(test)]
 mod tests {
+    use std::collections::HashMap;
+
     use crate::{parse, Direction, Map};
 
-    const INPUT: &str = include_str!("../data/test.txt");
+    const AOC_TEST_INPUT: &str = "        ...#
+    .#..
+    #...
+    ....
+...#.......#
+........#...
+..#....#....
+..........#.   
+    ...#....
+    .....#..
+    .#......
+    ......#.
+
+10R5L5R10L4R5L5";
+
     #[test]
     fn part_1_works() {
         tracing_subscriber::fmt::init();
-        let result = crate::process_part1(INPUT);
+        let result = crate::process_part1(AOC_TEST_INPUT);
         assert_eq!(result, "6032");
     }
 
     #[test]
     #[ignore]
     fn part_2_works() {
-        let result = crate::process_part2(INPUT);
-        assert_eq!(result, "301");
+        let result = crate::process_part2(AOC_TEST_INPUT);
+        assert_eq!(result, "5031");
     }
 
     #[test]
     fn test_map_idx_wrap() {
         let map: Map = Map {
-            data: Vec::<char>::new(),
+            data: HashMap::<(usize, usize), char>::new(),
             rmax: 10,
             cmax: 10,
         };
@@ -241,12 +258,15 @@ mod tests {
     #[test]
     fn test_map_idx_region_wrap_with_with_space_on_outside() {
         let map: Map = Map {
-            data: vec![
-                ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-                '.', '.', '.', ' ', ' ', ' ', ' ', '.', '#', '.', ' ', ' ', ' ', ' ', '.', '.',
-                '.', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-                ' ',
-            ],
+            data: turn_into_map(vec![
+                "       ",
+                "       ",
+                "  ...  ",
+                "  ...  ",
+                "  ...  ",
+                "       ",
+                "       ",
+            ]),
             rmax: 7,
             cmax: 7,
         };
@@ -275,12 +295,15 @@ mod tests {
     #[test]
     fn test_map_idx_region_wrap_with_with_space_between_regions_in_path() {
         let map: Map = Map {
-            data: vec![
-                ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-                '.', '.', '.', ' ', ' ', ' ', ' ', '.', ' ', '.', ' ', ' ', ' ', ' ', '.', '.',
-                '.', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-                ' ',
-            ],
+            data: turn_into_map(vec![
+                "       ",
+                "       ",
+                "  ...  ",
+                "  . .  ",
+                "  ...  ",
+                "       ",
+                "       ",
+            ]),
             rmax: 7,
             cmax: 7,
         };
@@ -306,24 +329,21 @@ mod tests {
         assert_eq!((nr, nc), (2, col));
     }
 
+    fn turn_into_map(data: Vec<&str>) -> HashMap<(usize, usize), char> {
+        data.into_iter()
+            .enumerate()
+            .flat_map(|(r, l)| {
+                l.chars()
+                    .enumerate()
+                    .filter(|(_, ch)| *ch != ' ')
+                    .map(move |(c, ch)| ((r, c), ch))
+            })
+            .collect()
+    }
+
     #[test]
     fn test_map_idx_region_wrap_test_input_example() {
-        let input = "        ...#
-        .#..
-        #...
-        ....
-...#.......#
-........#...
-..#....#....
-..........#.   
-        ...#....
-        .....#..
-        .#......
-        ......#.
-
-10R5L5R10L4R5L5";
-
-        let (_s, (map, _instructions)) = parse(input).unwrap();
+        let (_s, (map, _instructions)) = parse(AOC_TEST_INPUT).unwrap();
 
         let position = (6, 11);
         let expected = (6, 0);
