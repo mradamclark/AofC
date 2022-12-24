@@ -179,7 +179,7 @@ impl Field {
 
 fn get_proprosed_move(
     elf_loc: &Location,
-    last_direction: Option<Direction>,
+    direction: Option<Direction>,
     field: &Field,
 ) -> Option<(Location, Location, Direction)> {
     // println!("--------------");
@@ -188,11 +188,7 @@ fn get_proprosed_move(
         //Don't need to move when i have no neighbours.
         return None;
     } else {
-        let mut next_direction = Direction::North;
-        if last_direction != None {
-            next_direction = last_direction.unwrap();
-            next_direction = next_direction.next();
-        }
+        let mut next_direction = direction.unwrap();
         let first_direction_this_round = next_direction;
 
         let mut cnt = 1;
@@ -248,29 +244,30 @@ fn update_common_move_to_stay_move(
 
 pub fn process_part1(input: &str, turns: u32) -> String {
     let (_, mut field) = parse(input).unwrap();
-
-    field.print(0);
-    for round in 1..=3 {
-        field.print_state(0);
+    let mut next_direction = Direction::North;
+    // field.print(0);
+    for round in 1..=turns {
+        // field.print_state(0);
         let mut proposed_moves: Vec<(Location, Location, Direction)> = field
             .data
             .iter()
             .filter_map(|(elf_loc, last_direction)| {
-                get_proprosed_move(&elf_loc, *last_direction, &field)
+                get_proprosed_move(&elf_loc, Some(next_direction), &field)
             })
             .collect();
 
-        println!("---Proposed Moves--------");
+        // println!("---Proposed Moves--------");
         proposed_moves = update_common_move_to_stay_move(&proposed_moves);
-        print_proposed_moves(&proposed_moves);
+        // print_proposed_moves(&proposed_moves);
 
         proposed_moves.drain(0..).for_each(|(elf, loc, direction)| {
             field.do_move(&elf, &loc, direction);
         });
 
-        println!("");
-        field.print(0);
-        println!("\n== End of Round {round:?} ==");
+        // println!("");
+        // field.print(0);
+        // println!("\n== End of Round {round:?} ==");
+        next_direction = next_direction.next();
     }
     // field.print(0);
     field.score().to_string()
@@ -287,8 +284,42 @@ fn print_proposed_moves(pmoves: &Vec<(Location, Location, Direction)>) {
     }
 }
 
-pub fn process_part2(_input: &str) -> String {
-    0.to_string()
+pub fn process_part2(input: &str) -> String {
+    let (_, mut field) = parse(input).unwrap();
+    let mut next_direction = Direction::North;
+    // field.print(0);
+    let mut cnt = 1;
+    loop {
+        // field.print_state(0);
+        let mut proposed_moves: Vec<(Location, Location, Direction)> = field
+            .data
+            .iter()
+            .filter_map(|(elf_loc, last_direction)| {
+                get_proprosed_move(&elf_loc, Some(next_direction), &field)
+            })
+            .collect();
+
+        // println!("---Proposed Moves--------");
+        proposed_moves = update_common_move_to_stay_move(&proposed_moves);
+        // print_proposed_moves(&proposed_moves);
+
+        if proposed_moves.len() == 0 {
+            break;
+        }
+        cnt += 1;
+
+        proposed_moves.drain(0..).for_each(|(elf, loc, direction)| {
+            field.do_move(&elf, &loc, direction);
+        });
+
+        // println!("");
+        // field.print(0);
+        // println!("\n== End of Round {round:?} ==");
+        next_direction = next_direction.next();
+    }
+    // field.print(0);
+    // field.score().to_string()
+    cnt.to_string()
 }
 #[cfg(test)]
 mod tests {
@@ -336,10 +367,9 @@ mod tests {
     }
 
     #[test]
-    #[ignore]
     fn part_2_works() {
         let result = crate::process_part2(AOC_TEST_INPUT);
-        assert_eq!(result, "5031");
+        assert_eq!(result, "20");
     }
 
     macro_rules! get_proposed_move_tests {
