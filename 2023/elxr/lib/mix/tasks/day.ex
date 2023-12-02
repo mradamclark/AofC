@@ -3,20 +3,14 @@ defmodule Mix.Tasks.Day do
 
   @shortdoc "Run Day"
   def run(args) do
-    day = Enum.at(args, 0)
-    part = Enum.at(args, 1)
-    benchmark? = Enum.at(args, 2) == "-b"
+    day = Enum.at(args, 0, 1)
+    part = Enum.at(args, 1, 1)
 
     input = AoC.Loader.load(day)
-    module_name = String.to_atom("Elixir.AoC.Day#{day}")
+    module_name = String.to_atom("Elixir.AoC.Day#{String.pad_leading(day, 2, "0")}")
     fun_name = String.to_atom("part#{part}")
 
-    if benchmark?,
-      do: Benchee.run(%{"part_#{part}": fn -> apply(module_name, fun_name, [input]) end}),
-      else:
-        IO.inspect(apply(module_name, fun_name, [input]),
-          label: "Part #{part} results",
-          charlists: :as_lists
-        )
+    result = apply(module_name, fun_name, [input])
+    IO.inspect(result, label: "Part #{part} results:")
   end
 end
