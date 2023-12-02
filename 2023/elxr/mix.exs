@@ -22,7 +22,8 @@ defmodule AoC.MixProject do
   defp deps do
     [
       {:benchee, "~> 1.2"},
-      {:httpoison, "~> 2.2"}
+      {:httpoison, "~> 2.2"},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false}
     ]
   end
 end
