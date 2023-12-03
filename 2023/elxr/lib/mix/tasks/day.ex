@@ -7,6 +7,7 @@ defmodule Mix.Tasks.Day do
     part = Enum.at(args, 1, 1)
 
     input = AoC.Loader.load(day)
+
     module_name = String.to_atom("Elixir.AoC.Day#{String.pad_leading(day, 2, "0")}")
     fun_name = String.to_atom("part#{part}")
 

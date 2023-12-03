@@ -14,7 +14,10 @@ defmodule AoC.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger]
+      extra_applications: [:logger],
+      env: [
+        cookie: ""
+      ]
     ]
   end
 
@@ -23,7 +26,8 @@ defmodule AoC.MixProject do
     [
       {:benchee, "~> 1.2"},
       {:httpoison, "~> 2.2"},
-      {:credo, "~> 1.7", only: [:dev, :test], runtime: false}
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      {:nimble_parsec, "~> 1.2"}
     ]
   end
 end
