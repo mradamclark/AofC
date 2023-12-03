@@ -1,5 +1,5 @@
 defmodule AoC.Loader do
-  def load(day, name \\ "test.txt") do
+  def load(day, name \\ "input.txt") do
     day = String.pad_leading(day, 2, "0")
 
     "../inputs/day_#{day}_#{name}"
